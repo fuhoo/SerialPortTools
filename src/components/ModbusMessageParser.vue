@@ -49,8 +49,8 @@
             <td>{{ getRawHex(rule) }}</td>
             <td>
               <select v-model="rule.order">
-                <option value="ABCD">ABCD（大端序-高字节在前）</option>
-                <option value="DCBA">DCBA（小端序-低字节在前）</option>
+                <option value="ABCD">ABCD（大端-高字节在前）</option>
+                <option value="DCBA">DCBA（小端-低字节在前）</option>
                 <option value="BADC">BADC（字节交换）</option>
                 <option value="CDAB">CDAB（字节交换）</option>
               </select>

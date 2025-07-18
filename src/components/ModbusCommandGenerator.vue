@@ -38,15 +38,24 @@
     </form>
     <div v-if="result.rtu">
       <h3>Modbus RTU 命令：</h3>
-      <div class="result">{{ result.rtu }}</div>
+      <div class="result-container">
+        <div class="result">{{ result.rtu }}</div>
+        <button @click="copyToClipboard(result.rtu, 'rtu')" class="copy-btn">{{ copiedRtu ? '已复制' : '复制' }}</button>
+      </div>
     </div>
     <div v-if="result.ascii">
       <h3>Modbus ASCII 命令：</h3>
-      <div class="result">{{ result.ascii }}</div>
+      <div class="result-container">
+        <div class="result">{{ result.ascii }}</div>
+        <button @click="copyToClipboard(result.ascii, 'ascii')" class="copy-btn">{{ copiedAscii ? '已复制' : '复制' }}</button>
+      </div>
     </div>
     <div v-if="result.tcp">
       <h3>Modbus TCP 命令：</h3>
-      <div class="result">{{ result.tcp }}</div>
+      <div class="result-container">
+        <div class="result">{{ result.tcp }}</div>
+        <button @click="copyToClipboard(result.tcp, 'tcp')" class="copy-btn">{{ copiedTcp ? '已复制' : '复制' }}</button>
+      </div>
     </div>
   </div>
 </template>
@@ -67,6 +76,9 @@ const command = ref('')
 const writeValue = ref('')
 const writeMulti = ref('')
 const result = ref({ rtu: '', ascii: '', tcp: '' })
+const copiedRtu = ref(false)
+const copiedAscii = ref(false)
+const copiedTcp = ref(false)
 
 function toHex(num, len = 2) {
   return num.toString(16).toUpperCase().padStart(len, '0')
@@ -168,6 +180,21 @@ function generateCommand() {
     result.value.ascii = ''
   }
 }
+
+function copyToClipboard(text, type) {
+  navigator.clipboard.writeText(text).then(() => {
+    if (type === 'rtu') {
+      copiedRtu.value = true
+      setTimeout(() => copiedRtu.value = false, 2000)
+    } else if (type === 'ascii') {
+      copiedAscii.value = true
+      setTimeout(() => copiedAscii.value = false, 2000)
+    } else if (type === 'tcp') {
+      copiedTcp.value = true
+      setTimeout(() => copiedTcp.value = false, 2000)
+    }
+  })
+}
 </script>
 
 <style scoped>
@@ -202,5 +229,25 @@ label {
   padding: 8px 12px;
   border-radius: 4px;
   margin-top: 8px;
+}
+.result-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 8px;
+}
+.copy-btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #d0d7de;
+  background: #fff;
+  color: #1976d2;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+.copy-btn:hover {
+  background: #f0f7ff;
 }
 </style> 

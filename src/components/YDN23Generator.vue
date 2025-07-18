@@ -13,14 +13,14 @@
       <h3>ASCII命令：</h3>
       <div class="result-container">
         <div class="result">{{ result.ascii }}</div>
-        <button @click="copyToClipboard(result.ascii)" class="copy-btn">复制</button>
+        <button @click="copyToClipboard(result.ascii, 'ascii')" class="copy-btn">{{ copiedAscii ? '已复制' : '复制' }}</button>
       </div>
     </div>
     <div v-if="result.hex">
       <h3>HEX命令：</h3>
       <div class="result-container">
         <div class="result">{{ result.hex }}</div>
-        <button @click="copyToClipboard(result.hex)" class="copy-btn">复制</button>
+        <button @click="copyToClipboard(result.hex, 'hex')" class="copy-btn">{{ copiedHex ? '已复制' : '复制' }}</button>
       </div>
     </div>
     <div class="dz-divider"></div>
@@ -53,13 +53,21 @@ const data = ref('')
 const result = ref({ ascii: '', hex: '' })
 const parseInput = ref('')
 const parseResult = ref(null)
+const copiedAscii = ref(false)
+const copiedHex = ref(false)
 
-function copyToClipboard(text) {
+function copyToClipboard(text, type) {
   navigator.clipboard.writeText(text).then(() => {
-    alert('已复制到剪贴板！')
+    if (type === 'ascii') {
+      copiedAscii.value = true
+      setTimeout(() => copiedAscii.value = false, 3000)
+    } else if (type === 'hex') {
+      copiedHex.value = true
+      setTimeout(() => copiedHex.value = false, 3000)
+    }
   }).catch(err => {
     console.error('复制失败:', err)
-    alert('复制失败，请手动复制')
+    // 可选：失败时可用其它提示方式
   })
 }
 
